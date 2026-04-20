@@ -13,6 +13,21 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('customer_id')
+                ->constrained('customers')
+                ->onDelete('cascade');
+            
+            $table->enum('application_type',['motor','mobil','multiguna']);
+            $table->bigInteger('nominal');
+            $table->integer('tenor');
+            $table->text('notes')->nullable();
+
+            $table->enum('status',['pending','approved','rejected'])->default('pending');
+
+            $table->timestamp('filing_date')->useCurrent();
+
+            
             $table->timestamps();
         });
     }
