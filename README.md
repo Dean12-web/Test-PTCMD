@@ -1,5 +1,9 @@
 <p align="center">TEST PT Capella Multidana</p>
 
+## Deskripsi
+Aplikasi ini dibangun menggunakan **Laravel 11** dan **Alpine.js** sebagai frontend scripting.
+
+
 ## Fitur Aplikasi : 
 - Input pengajuan
 - Validasi otomatis
@@ -14,6 +18,32 @@
 
 ## Cara Menjalankan Aplikasi
 
+1. Clone dulu aplikasi dari github
+
 ```bash
 git clone git@github.com:Dean12-web/Test-PTCMD.git
 cd Test-PTCMD
+```
+2. Install dependency
+```bash
+composer install
+npm install
+```
+3. Setup Environtment
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+4. Jalankan Migrasi
+```bash
+php artisan migrate
+```
+
+5.Jalankan aplikasi
+```bash
+php artisan serve
+npm run dev
+```
+
+
+
