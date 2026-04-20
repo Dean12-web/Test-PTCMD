@@ -39,11 +39,17 @@ php artisan key:generate
 php artisan migrate
 ```
 
-5.Jalankan aplikasi
+5. Jalankan aplikasi
 ```bash
 php artisan serve
 npm run dev
 ```
+
+6. Route
+```bash
+application-form // Untuk ke halaman pengajuan
+application // Untuk ke halaman dashboard pengajuan
+``` 
 
 
 

@@ -4,9 +4,9 @@ use App\Http\Controllers\admin\ApplicationController as AdminApplicationControll
 use App\Http\Controllers\front\ApplicationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [ApplicationController::class, 'index']);
+Route::get('/application-form', [ApplicationController::class, 'index']);
 
-Route::get('/application', [AdminApplicationController::class, 'index'])->name('admin');
+Route::get('/application', [AdminApplicationController::class, 'index'])->name('application');
 
 Route::post('/application-store', [AdminApplicationController::class, 'store'])->name('application-store');
 
