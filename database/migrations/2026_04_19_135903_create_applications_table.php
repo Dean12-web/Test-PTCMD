@@ -21,11 +21,14 @@ return new class extends Migration
             $table->enum('application_type',['motor','mobil','multiguna']);
             $table->bigInteger('nominal');
             $table->integer('tenor');
+            $table->bigInteger('monthly_installment')->nullable();
             $table->text('notes')->nullable();
+            
 
             $table->enum('status',['pending','approved','rejected'])->default('pending');
 
-            $table->timestamp('filing_date')->useCurrent();
+            $table->timestamp('filling_date')->useCurrent();
+            
 
             
             $table->timestamps();

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Form Pengajuan</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -14,7 +15,7 @@
             Form Pengajuan Pembiayaan
         </h2>
 
-        <form class="space-y-5" enctype="multipart/form-data"  x-data="applicationForm()" @submit.prevent="submitForm">
+        <form class="space-y-5" enctype="multipart/form-data" x-data="applicationForm()" @submit.prevent="submitForm">
             @csrf
             <!-- Nama -->
             <div>
@@ -122,63 +123,93 @@
                 errors: {},
 
                 resetForm() {
-                    this.name = '';
-                    this.income = '';
-                    this.application_type = '';
-                    this.nominal = '';
-                    this.tenor = '';
-                    this.notes = '';
+                    this.name = ''
+                    this.income = ''
+                    this.application_type = ''
+                    this.nominal = ''
+                    this.tenor = ''
+                    this.notes = ''
+
+                    this.errors = {}
                 },
 
                 validate() {
-                    this.errors = {};
+                    this.errors = {}
+
+                    let nominal = Number(this.nominal)
+                    let income = Number(this.income)
 
                     if (!this.name.trim()) {
-                        this.errors.name = 'Nama lengkap wajib diisi.';
+                        this.errors.name = 'Nama lengkap wajib diisi.'
                     }
 
                     if (!this.application_type) {
-                        this.errors.application_type = 'Tipe pengajuan wajib dipilih.';
+                        this.errors.application_type = 'Tipe pengajuan wajib dipilih.'
                     }
 
-                    if (!this.nominal || this.nominal <= 0 ) {
-                        this.errors.nominal = 'Nominal pengajuan harus lebih dari 0.';
+                    if (!this.nominal || this.nominal <= 0) {
+                        this.errors.nominal = 'Nominal pengajuan harus lebih dari 0.'
                     }
 
-                    if(this.nominal >= 200000000){
-                        this.errors.nominal = 'Nominal pengajuan tidak boleh lebih dari 200.000.000.';
+                    if (this.nominal >= 200000000) {
+                        this.errors.nominal = 'Nominal pengajuan tidak boleh lebih dari 200.000.000.'
                     }
 
                     if (!this.tenor) {
-                        this.errors.tenor = 'Tenor wajib dipilih.';
+                        this.errors.tenor = 'Tenor wajib dipilih.'
                     }
 
                     if (!this.income || this.income <= 0 || this.income < 1000000) {
-                        this.errors.income = 'Pendapatan bulanan harus lebih dari 1.000.000.';
+                        this.errors.income = 'Pendapatan bulanan nasabah harus lebih dari 1.000.000.'
                     }
 
                     return Object.keys(this.errors).length === 0
                 },
 
-                submitForm() {
-                    if (!this.validate()) {
-                        return
+                async submitForm(event) {
+                    try {
+                        if (!this.validate()) {
+                            return
+                        }
+
+                        let formData = new FormData();
+
+                        formData.append('name', this.name)
+                        formData.append('application_type', this.application_type)
+                        formData.append('nominal', this.nominal)
+                        formData.append('tenor', this.tenor)
+                        formData.append('income', this.income)
+                        formData.append('notes', this.notes)
+
+                        for (let pair of formData.entries()) {
+                            console.log(pair[0] + ': ' + pair[1]);
+                        }
+                        let url = '/application-store'
+                        let method = 'POST'
+
+                        const res = await fetch(url,{
+                            method: method,
+                            headers:{
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                            body: formData
+                        })
+
+                        const data = await res.json()
+
+                        if(res.ok && data.success){
+                            alert('Pengajuan berhasil disimpan!')
+                            this.resetForm()
+                        } else {
+                            alert(data.message || 'Terjadi kesalahan saat menyimpan pengajuan.')
+                            this.resetForm()
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat mengirim data.')
                     }
-
-                    let formData = new FormData();
-
-                    formData.append('name', this.name)
-                    formData.append('application_type', this.application_type)
-                    formData.append('nominal', this.nominal)
-                    formData.append('tenor', this.tenor)
-                    formData.append('income', this.income)
-                    formData.append('notes', this.notes)
-
-                    for (let pair of formData.entries()) {
-                        console.log(pair[0] + ': ' + pair[1]);
-                    }
-
-
                 }
             }
         }
