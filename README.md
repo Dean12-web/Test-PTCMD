@@ -18,7 +18,7 @@ Aplikasi ini dibangun menggunakan **Laravel 11** dan **Alpine.js** sebagai front
 
 ## Cara Menjalankan Aplikasi
 
-1. Clone dulu aplikasi dari github
+1. Clone aplikasi dari github
 
 ```bash
 git clone git@github.com:Dean12-web/Test-PTCMD.git
